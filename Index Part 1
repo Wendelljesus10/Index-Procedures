@@ -1,0 +1,31 @@
+use company;
+
+show tables;
+show index from company.employee;
+
+select * from employee;
+select * from department;
+
+-- Departamento e o número de pessoas
+select d.Dname as Nome_Departamento,e.Dno as Número_Departamento,count(e.Dno) as Qnt_Pessoas from employee e
+ inner join  department d on d.Dnumber = e.Dno Group by Dno;
+ 
+ -- indíce diretamente no número de Departamento
+ create index index_dno_hash on employee(Dno) using btree;
+ 
+ show index from employee;
+ 
+ select * from department;
+show index from department;
+
+select * from dept_locations;
+show index from dept_locations;
+-- Indice já criado pelo sistema na primary key para localização ddo departamentos
+
+
+-- Relaçao de empregados por departamento
+select * from employee;
+select * from department;
+
+select e.Fname as Nome, d.Dname as Nome_departamento, d.Dnumber as Numero_department from employee e
+inner join department d on d.Dnumber = e.Dno;
