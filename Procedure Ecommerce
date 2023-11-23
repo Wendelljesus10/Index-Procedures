@@ -1,0 +1,54 @@
+use desafio1;
+
+-- select de total de pedidos por cliente
+delimiter \\
+create procedure select_procedure()
+begin
+	select pf.fname as NOME, count(clienteped_id) as TOTAL_PEDIDOS from pessoafisica pf
+				inner join cadastrocliente c ON c.pfisica_id = pf.pfisica_id
+                inner join pedidos p on p.clienteped_id = c.cliente_id
+		group by clienteped_id; 
+
+end \\
+delimiter ;
+
+call select_procedure;
+
+
+
+-- procedure de inserção de porduto
+delimiter \\
+create procedure insert_procedure(
+in produto_id_p int,
+in nome_p varchar(50),
+in categoria_p enum('Vestuário','Tênis','Acessório'),
+in tamanho_p varchar(5),
+in valor_p float,
+in descricão_p varchar(80)
+)
+begin
+if (produto_id_p > 13) then
+insert into produto (produto_id,nome,categoria,tamanho,valor,descrição) values (produto_id_p,nome_p,categoria_p,tamanho_p,valor_p,descricão_p);
+select 'Produto inserido' as Message;
+else
+select 'Já inserido' as Message;
+end if;
+end \\
+delimiter ;
+
+call insert_procedure(14, 'Samba','Tênis','42','1000',null);
+call insert_procedure(12, 'Salomon','Tênis','42','1000',null);
+call insert_procedure(15, 'Salomon','Tênis',null,'1000',null);
+
+select * from produto;
+
+
+
+-- procedure que deleta valor nulo na tabela tamanho
+delimiter //
+create procedure delete_produto(
+)
+begin
+    delete from produto where tamanho is null;
+ end //
+delimiter ;
