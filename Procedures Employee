@@ -1,0 +1,73 @@
+use company;
+
+-- Procedure onde puxa uma informação dos projetos(Pname) que os Empregados(Employee's) fazem parte e suas identificações (Ssn)
+delimiter \\
+create procedure projects_employee()
+begin
+	select e.Fname as Nome,e.Ssn as Identificacao,d.Dname as Nome_Departamento,p.Pname as Projeto_participando from employee e
+    inner join department d on d.Dnumber = e.Dno
+    inner join project p on p.Dnum = e.Dno
+    order by Fname asc;
+end \\
+delimiter ;
+
+call projects_employee;
+
+
+-- Procedure para criação de novo Departamento
+delimiter \\
+create procedure insert_newdept(
+    in Dname_p varchar(15),
+    in Dnumber_p int,
+    in Mgr_ssn_p char(9),
+    in Mgr_start_date_p date	
+)
+begin
+		insert into department (Dname, Dnumber, Mgr_ssn, Mgr_start_date) values(Dname_p, Dnumber_p, Mgr_ssn_p,Mgr_start_date_p);
+		select 'Inserção bem sucedida' as Message;
+        select * from department;
+end \\
+delimiter ;
+
+call insert_newdept('TI','7',null,'1981-06-20');
+
+
+-- procedure com inserção usando if
+delimiter //
+create procedure insert_newdept_erro(
+    in Dname_p varchar(15),
+    in Dnumber_p int,
+    in Mgr_ssn_p char(9),
+    in Mgr_start_date_p date	
+)
+begin
+if Dnumber_p >= Dnumber_p then
+		insert into department (Dname, Dnumber, Mgr_ssn, Mgr_start_date) values(Dname_p, Dnumber_p, Mgr_ssn_p,Mgr_start_date_p);
+		select 'Inserção bem sucedida' as Message;
+        else
+        		select 'ja inserido' as Message;
+                end if;
+
+ end //
+delimiter ;
+
+
+call insert_newdept_erro('SQLi','9',null,'1990-10-20');
+select * from department;
+
+
+
+
+-- procedure de exclusão
+drop procedure delete_newdept;
+
+delimiter //
+create procedure delete_newdept()
+begin
+    delete from department where Dnumber = 9;
+    delete from department where Dnumber = 7;
+ end //
+delimiter ;
+
+call delete_newdept;
+select * from department;
